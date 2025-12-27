@@ -9,7 +9,7 @@ import org.apache.lucene.document.StringField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.store.NIOFSDirectory;
 
 import com.codesearch.codesearch.records.IndexedLine;
 
@@ -27,8 +27,23 @@ public class CodeIndexer {
 
     public static void createIndex(Path indexPath, List<IndexedLine> lines) {
         try {
+            System.out.println("CodeIndexer : createIndex : indexPath : " + indexPath);
+            System.out.println("CodeIndexer : createIndex : docsToCreate : " + lines.size());           
+
             IndexWriter indexWriter = createWriter(indexPath) ;
-            for(IndexedLine line : lines) {
+            boolean isPrint = true ;
+            for(IndexedLine line : lines) {        
+                if(isPrint) {
+                    isPrint = false ;
+                    System.out.println("CodeIndexer : createIndex : inLoop : " 
+                        + line.content()
+                        + " , "
+                        + line.filename()
+                        + " , "
+                        + line.lineNumber()
+                    );
+                }
+
                 Document doc = new Document() ;
 
                 doc.add(new TextField("content", line.content(), Field.Store.YES)) ;
@@ -36,6 +51,10 @@ public class CodeIndexer {
                 doc.add(new StoredField("line", line.lineNumber())) ;
                 indexWriter.addDocument(doc) ;
             }
+            
+            indexWriter.commit() ;
+            indexWriter.close() ;
+
         } catch(IOException ioe) {
             System.out.println("CodeIndexer : createIndex : ");
         }
@@ -45,7 +64,8 @@ public class CodeIndexer {
         IndexWriterConfig config = new IndexWriterConfig(new StandardAnalyzer());
         config.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
 
-        Directory directory = FSDirectory.open(indexPath);
+        // Directory directory = NIOFSDirectory.open(indexPath);
+        Directory directory = new NIOFSDirectory(indexPath);
 
         return new IndexWriter(directory, config);
     }

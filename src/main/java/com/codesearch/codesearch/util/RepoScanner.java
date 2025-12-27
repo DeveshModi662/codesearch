@@ -21,6 +21,7 @@ public class RepoScanner {
                 .filter(path -> !isIgnored(path))
                 .forEach(file -> {
                     try {
+                        System.out.println("RepoScanner : filters : filename : " + file.getFileName());
                         List<String> lines = Files.readAllLines(file) ;
                         for(int i = 0 ; i < lines.size() ; i++) {
                             result.add(new IndexedLine(file.getFileName().toString(), i+1, lines.get(i))) ;
@@ -29,7 +30,7 @@ public class RepoScanner {
                         System.out.println("RepoScanner : ");
                     }
                 });
-
+        System.out.println("RepoScanner : filters : totalDocs : " + result.size()) ;
         return result;
     }
 

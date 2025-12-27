@@ -15,7 +15,7 @@ public class SearchCLI {
 
     private static void handleCreate(String[] args) throws Exception {
         Path codebase = Path.of(args[1]);
-        Path indexPath = Path.of(args[2]);
+        Path indexPath = Path.of(args[2]);    
         System.out.println("Creating index on " + codebase + " at " + indexPath);
 
         List<IndexedLine> lines = RepoScanner.scan(codebase);
@@ -25,8 +25,9 @@ public class SearchCLI {
 
     }
 
-    private static void handleSearch(String[] args, Path indexPath) throws Exception {
+    private static void handleSearch(String[] args, Path indexPath) throws Exception {        
         String contentQuery = args[1].substring("--content=".length()) ;
+        System.out.println("SearchCLI : handleSearch : Search " + contentQuery + " from " + indexPath);
         SearchService.search(contentQuery, indexPath);        
         
     }
