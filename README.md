@@ -2,7 +2,7 @@
 A basic CLI tool codesearch based on exact string matching of pattern matching.
 
 ## Installation 
-1. Download the ZIP
+1. Download the ZIP [babygrokcli.zip](https://github.com/user-attachments/files/24356699/babygrokcli.zip)
 2. Unzip the file
 3. Add the extracted folder to system path
 4. Restart the terminal if already open
