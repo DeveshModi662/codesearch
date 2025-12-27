@@ -26,6 +26,8 @@ public class RepoScanner {
                         for(int i = 0 ; i < lines.size() ; i++) {
                             result.add(new IndexedLine(file.getFileName().toString(), i+1, lines.get(i))) ;
                         }
+                        String fullContent = String.join("\n", lines);  
+                        result.add(new IndexedLine(file.getFileName().toString(), 0, fullContent));
                     } catch(IOException e) {
                         System.out.println("RepoScanner : ");
                     }

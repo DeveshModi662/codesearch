@@ -46,9 +46,15 @@ public class CodeIndexer {
 
                 Document doc = new Document() ;
 
-                doc.add(new TextField("content", line.content(), Field.Store.YES)) ;
-                doc.add(new StringField("filename", line.filename(), Field.Store.YES)) ;
-                doc.add(new StoredField("line", line.lineNumber())) ;
+                if(line.lineNumber() != 0) {
+                    doc.add(new TextField("content", line.content(), Field.Store.YES)) ;
+                    doc.add(new StringField("filename", line.filename(), Field.Store.YES)) ;
+                    doc.add(new StoredField("line", line.lineNumber())) ;
+                }
+                else {
+                    doc.add(new TextField("content", line.content(), Field.Store.NO)) ;
+                    doc.add(new StringField("filename", line.filename(), Field.Store.YES)) ;
+                }
                 indexWriter.addDocument(doc) ;
             }
             

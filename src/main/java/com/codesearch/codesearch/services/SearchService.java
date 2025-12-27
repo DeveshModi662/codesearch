@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 // import java.util.Set;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -14,6 +15,7 @@ import org.apache.lucene.index.MultiTerms;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.index.Terms;
 import org.apache.lucene.index.TermsEnum;
+import org.apache.lucene.queries.spans.SpanMultiTermQueryWrapper;
 import org.apache.lucene.queries.spans.SpanNearQuery;
 import org.apache.lucene.queries.spans.SpanQuery;
 import org.apache.lucene.queries.spans.SpanTermQuery;
@@ -89,12 +91,18 @@ public class SearchService {
             List<String> wildcards = Arrays.asList(input.toLowerCase().replaceAll("^\\*+|\\*+$", "").split("\\*"));            
             System.out.println("SearchService : buildQuery : wildcard : after regex") ;
             List<SpanQuery> tokens = new ArrayList<>() ;
-            for(String token : wildcards) {
-                System.err.print(token + " ");
-                tokens.add(new SpanTermQuery(new Term("content", token))) ;
-            }
-            System.out.println("");
-            SpanNearQuery spanQuery = new SpanNearQuery(tokens.toArray(new SpanQuery[0]), 100000, false) ;
+            // for(String token : wildcards) {
+            //     System.err.print(token + " ");
+            //     // tokens.add(new SpanTermQuery(new Term("content", token))) ;
+            //     tokens.add(new SpanMultiTermQueryWrapper<>(new WildcardQuery(new Term("content", token)))) ;
+            // }
+            // System.out.println("");            
+            List<SpanQuery> spanTokens = wildcards.stream()
+            .map(t -> new SpanMultiTermQueryWrapper<>(new WildcardQuery(new Term("content", "*"+t+"*"))))
+            .collect(Collectors.toList());
+            
+            // SpanNearQuery spanQuery = new SpanNearQuery(tokens.toArray(new SpanQuery[0]), 100000, false) ;
+            SpanNearQuery spanQuery = new SpanNearQuery(spanTokens.toArray(new SpanQuery[0]), Integer.MAX_VALUE, true) ;
 
             System.out.println("SearchService : buildQuery : wildcard") ;
             return spanQuery ;
