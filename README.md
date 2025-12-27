@@ -1,5 +1,5 @@
 # BabyGrok
-A basic CLI tool codesearch based on exact string matching of pattern matching.
+A CLI tool codesearch based on exact string matching of pattern matching.
 
 ## Installation 
 1. Download the ZIP [babygrokcli.zip](https://github.com/user-attachments/files/24356699/babygrokcli.zip)
